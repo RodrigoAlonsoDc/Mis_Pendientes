@@ -29,12 +29,15 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, initialDa
     if (isOpen) {
       if (initialData) {
         setFormData({
-          ...initialData,
+          title: initialData.title || '',
+          description: initialData.description || '',
+          start_time: initialData.start_time ? formatDateTime(initialData.start_time) : formatDateTime(new Date()),
+          end_time: initialData.end_time ? formatDateTime(initialData.end_time) : formatDateTime(new Date(new Date().getTime() + 60 * 60 * 1000)),
           status: initialData.status ? initialData.status.toUpperCase() : 'PENDIENTE',
+          color: initialData.color || '#3b82f6',
+          progress: initialData.progress || 0,
           priority: initialData.priority || 'Normal',
-          assignee: initialData.assignee || '',
-          start_time: formatDateTime(initialData.start_time),
-          end_time: formatDateTime(initialData.end_time)
+          assignee: initialData.assignee || ''
         });
         
         if (initialData.id) {
@@ -48,6 +51,8 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, initialDa
           start_time: formatDateTime(new Date()),
           end_time: formatDateTime(new Date(new Date().getTime() + 60 * 60 * 1000)),
           status: 'PENDIENTE',
+          color: '#3b82f6',
+          progress: 0,
           priority: 'Normal',
           assignee: ''
         });

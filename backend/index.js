@@ -72,7 +72,7 @@ app.post('/api/tasks', async (req, res) => {
     try {
         const [result] = await db.query(
             'INSERT INTO tasks (title, description, start_time, end_time, progress, status, color, priority, assignee, project_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [title, description || '', start_time, end_time, progress || 0, status || 'Pendiente', color || '#3b82f6', priority || 'Normal', assignee || '', project_id || 1]
+            [title, description || '', new Date(start_time), new Date(end_time), progress || 0, status || 'Pendiente', color || '#3b82f6', priority || 'Normal', assignee || '', project_id || 1]
         );
         res.status(201).json({ id: result.insertId, title, description, start_time, end_time, progress, status, color, priority, assignee, project_id });
     } catch (error) {
@@ -86,7 +86,7 @@ app.put('/api/tasks/:id', async (req, res) => {
     try {
         await db.query(
             'UPDATE tasks SET title = ?, description = ?, start_time = ?, end_time = ?, progress = ?, status = ?, color = ?, priority = ?, assignee = ?, project_id = ? WHERE id = ?',
-            [title, description, start_time, end_time, progress, status, color, priority, assignee, project_id, id]
+            [title, description || '', new Date(start_time), new Date(end_time), progress || 0, status || 'Pendiente', color || '#3b82f6', priority || 'Normal', assignee || '', project_id || 1, id]
         );
         res.json({ message: 'Task updated successfully' });
     } catch (error) {

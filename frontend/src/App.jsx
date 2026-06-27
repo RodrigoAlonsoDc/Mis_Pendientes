@@ -47,6 +47,7 @@ function App() {
       setIsModalOpen(false);
     } catch (e) {
       console.error(e);
+      alert('Error al guardar: ' + (e.response?.data?.error || e.message));
     }
   };
 
