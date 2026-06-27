@@ -433,3 +433,136 @@
 .btn-add-attachment:hover { color: #fff; }
 .attachment-form { background: rgba(255,255,255,0.02); padding: 0.5rem; border-radius: 4px; }
 .mb-2 { margin-bottom: 0.5rem; width: 100%; }
+
+/* Board View Styles */
+.board-view-container {
+  display: flex;
+  gap: 1.5rem;
+  height: 100%;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+.board-column {
+  width: 280px;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+}
+.board-column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.board-status-badge {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.board-task-count {
+  margin-left: 6px;
+  opacity: 0.8;
+}
+.board-column-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.add-task-icon {
+  background: none;
+  border: none;
+  color: #a3a6aa;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.add-task-icon:hover {
+  color: #fff;
+}
+.board-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 50px;
+}
+.board-card {
+  background-color: #2b2d31;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: grab;
+  transition: border-color 0.2s, transform 0.1s;
+}
+.board-card:active {
+  cursor: grabbing;
+}
+.board-card:hover {
+  border-color: rgba(255,255,255,0.15);
+}
+.board-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+.circle-check-board {
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+}
+.board-card-title {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.board-card-project {
+  color: #a3a6aa;
+  font-size: 0.75rem;
+  margin-left: 22px; /* Alineado con el título */
+  margin-bottom: 1rem;
+}
+.board-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-left: 22px;
+}
+.meta-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #a3a6aa;
+  font-size: 0.8rem;
+}
+.board-add-task-btn {
+  color: #a3a6aa;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+.board-add-task-btn:hover {
+  color: #fff;
+}
+.board-add-group {
+  width: 280px;
+  min-width: 280px;
+  color: #a3a6aa;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding-top: 0.5rem;
+}
+.board-add-group:hover {
+  color: #fff;
+}

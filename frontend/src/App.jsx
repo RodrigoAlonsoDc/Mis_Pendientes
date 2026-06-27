@@ -10,6 +10,7 @@ import TaskModal from './components/TaskModal';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
 import ListView from './components/views/ListView';
+import BoardView from './components/views/BoardView';
 import './App.css';
 
 const locales = { 'es': es };
@@ -63,6 +64,26 @@ function App() {
     }
   };
 
+  const handleDropTask = async (taskId, newStatus) => {
+    const taskIndex = tasks.findIndex(t => t.id === taskId);
+    if (taskIndex === -1) return;
+    
+    // Optimizacion visual inmediata
+    const taskToUpdate = { ...tasks[taskIndex], status: newStatus };
+    const updatedTasks = [...tasks];
+    updatedTasks[taskIndex] = taskToUpdate;
+    setTasks(updatedTasks);
+
+    try {
+      await axios.put(`${API_URL}/${taskId}`, taskToUpdate);
+      // No hacemos fetchTasks() inmediatamente para no hacer parpadear la interfaz
+    } catch (e) {
+      console.error(e);
+      alert('Error al mover la tarea: ' + (e.response?.data?.error || e.message));
+      fetchTasks(); // revertir si falla
+    }
+  };
+
   const eventStyleGetter = (event) => ({ style: { backgroundColor: event.color || '#3b82f6', borderRadius: '6px', color: '#fff', border: '0px', display: 'block' } });
 
   return (
@@ -100,7 +121,16 @@ function App() {
             />
           )}
 
-          {(currentView === 'board' || currentView === 'table') && (
+          {currentView === 'board' && (
+            <BoardView 
+              tasks={tasks}
+              onTaskClick={(task) => { setSelectedTask(task); setIsModalOpen(true); }}
+              onAddTask={(status) => { setSelectedTask({ status: status }); setIsModalOpen(true); }}
+              onDropTask={handleDropTask}
+            />
+          )}
+
+          {currentView === 'table' && (
             <div className="placeholder-view animate-fade-in">
               <h2>Esta vista está en construcción 🚧</h2>
               <p>Pronto podrás ver tus tareas en formato {currentView}.</p>
