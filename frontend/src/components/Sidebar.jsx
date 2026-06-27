@@ -7,7 +7,7 @@ export default function Sidebar({ currentView, setCurrentView }) {
         <div className="workspace-logo">R</div>
         <span className="workspace-name">Rodrigo's Workspace</span>
       </div>
-      
+
       <div className="sidebar-search">
         <Search size={14} className="search-icon" />
         <input type="text" placeholder="Buscar..." />
@@ -22,10 +22,10 @@ export default function Sidebar({ currentView, setCurrentView }) {
           <CheckSquare size={16} />
           <span>Mis tareas</span>
         </div>
-        
+
         {/* Navigation Tabs */}
-        <div className="nav-tabs" style={{marginLeft: '1.5rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.2rem'}}>
-          <button className={`nav-item ${currentView === 'topology' ? 'active' : ''}`} onClick={() => setCurrentView('topology')} style={{background: 'none', border: 'none', color: currentView === 'topology' ? '#fff' : '#a3a6aa', cursor: 'pointer', textAlign: 'left', padding: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+        <div className="nav-tabs" style={{ marginLeft: '1.5rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+          <button className={`nav-item ${currentView === 'topology' ? 'active' : ''}`} onClick={() => setCurrentView('topology')} style={{ background: 'none', border: 'none', color: currentView === 'topology' ? '#fff' : '#a3a6aa', cursor: 'pointer', textAlign: 'left', padding: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <CircleDot size={14} />
             Topología
           </button>
@@ -37,11 +37,11 @@ export default function Sidebar({ currentView, setCurrentView }) {
           <span>ESPACIOS</span>
           <Plus size={14} className="add-btn" />
         </div>
-        
+
         <div className="space-item">
           <div className="space-title">
             <ChevronRight size={14} className="chevron" />
-            <span className="color-dot" style={{backgroundColor: '#8b5cf6'}}></span>
+            <span className="color-dot" style={{ backgroundColor: '#8b5cf6' }}></span>
             Espacio del equipo
           </div>
           <div className="project-list">

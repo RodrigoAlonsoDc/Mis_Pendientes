@@ -2,7 +2,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, Plus, Trash2, CheckCircle2, Circle } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+let BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/tasks';
+if (BASE_URL.endsWith('/tasks')) {
+  BASE_URL = BASE_URL.slice(0, -6);
+}
 
 const STATUSES = ['PENDIENTE', 'EN CURSO', 'COMPLETADA'];
 const PRIORITIES = ['Baja', 'Normal', 'Alta', 'Urgente'];
@@ -65,14 +68,14 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, initialDa
 
   const fetchSubtasks = async (taskId) => {
     try {
-      const res = await axios.get(`${API_URL}/tasks/${taskId}/subtasks`);
+      const res = await axios.get(`${BASE_URL}/tasks/${taskId}/subtasks`);
       setSubtasks(res.data);
     } catch (e) { console.error('Error fetching subtasks', e); }
   };
 
   const fetchAttachments = async (taskId) => {
     try {
-      const res = await axios.get(`${API_URL}/tasks/${taskId}/attachments`);
+      const res = await axios.get(`${BASE_URL}/tasks/${taskId}/attachments`);
       setAttachments(res.data);
     } catch (e) { console.error('Error fetching attachments', e); }
   };
@@ -102,7 +105,7 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, initialDa
     if (e.key === 'Enter' && newSubtask.trim() && initialData?.id) {
       e.preventDefault();
       try {
-        const res = await axios.post(`${API_URL}/tasks/${initialData.id}/subtasks`, { title: newSubtask });
+        const res = await axios.post(`${BASE_URL}/tasks/${initialData.id}/subtasks`, { title: newSubtask });
         setSubtasks([...subtasks, res.data]);
         setNewSubtask('');
       } catch (e) { console.error(e); }
@@ -114,14 +117,14 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, initialDa
 
   const toggleSubtask = async (subtaskId, completed) => {
     try {
-      await axios.put(`${API_URL}/subtasks/${subtaskId}`, { completed: !completed });
+      await axios.put(`${BASE_URL}/subtasks/${subtaskId}`, { completed: !completed });
       setSubtasks(subtasks.map(st => st.id === subtaskId ? { ...st, completed: !completed } : st));
     } catch (e) { console.error(e); }
   };
 
   const deleteSubtask = async (subtaskId) => {
     try {
-      await axios.delete(`${API_URL}/subtasks/${subtaskId}`);
+      await axios.delete(`${BASE_URL}/subtasks/${subtaskId}`);
       setSubtasks(subtasks.filter(st => st.id !== subtaskId));
     } catch (e) { console.error(e); }
   };
@@ -130,7 +133,7 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, initialDa
   const handleAddAttachment = async () => {
     if (newAttachmentUrl.trim() && initialData?.id) {
       try {
-        const res = await axios.post(`${API_URL}/tasks/${initialData.id}/attachments`, {
+        const res = await axios.post(`${BASE_URL}/tasks/${initialData.id}/attachments`, {
           name: newAttachmentName || 'Enlace adjunto',
           url: newAttachmentUrl
         });
@@ -146,7 +149,7 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, initialDa
 
   const deleteAttachment = async (attachmentId) => {
     try {
-      await axios.delete(`${API_URL}/attachments/${attachmentId}`);
+      await axios.delete(`${BASE_URL}/attachments/${attachmentId}`);
       setAttachments(attachments.filter(a => a.id !== attachmentId));
     } catch (e) { console.error(e); }
   };
