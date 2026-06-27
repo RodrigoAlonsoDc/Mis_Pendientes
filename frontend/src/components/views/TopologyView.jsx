@@ -12,10 +12,8 @@ import {
 import '@xyflow/react/dist/style.css';
 import { Plus, Save, RotateCcw } from 'lucide-react';
 
-let BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/tasks';
-if (BASE_URL.endsWith('/tasks')) {
-  BASE_URL = BASE_URL.slice(0, -6);
-}
+let BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+BASE_URL = BASE_URL.replace(/\/tasks\/?$/, '');
 
 const PROJECT_ID = 1;
 
@@ -66,9 +64,10 @@ export default function TopologyView({ tasks }) {
     setSaving(true);
     try {
       await axios.put(`${BASE_URL}/topology/${PROJECT_ID}`, { nodes, edges });
+      alert('Pizarra guardada correctamente');
     } catch (e) {
       console.error(e);
-      alert('Error al guardar la topología');
+      alert(`Error al guardar la topología: ${e.message} | URL: ${BASE_URL}`);
     } finally {
       setTimeout(() => setSaving(false), 500);
     }

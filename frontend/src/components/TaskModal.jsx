@@ -2,10 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, Plus, Trash2, CheckCircle2, Circle } from 'lucide-react';
 
-let BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/tasks';
-if (BASE_URL.endsWith('/tasks')) {
-  BASE_URL = BASE_URL.slice(0, -6);
-}
+let BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+BASE_URL = BASE_URL.replace(/\/tasks\/?$/, '');
 
 const STATUSES = ['PENDIENTE', 'EN CURSO', 'COMPLETADA'];
 const PRIORITIES = ['Baja', 'Normal', 'Alta', 'Urgente'];
