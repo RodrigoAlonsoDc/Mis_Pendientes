@@ -1,6 +1,6 @@
 import { Home, CheckSquare, Plus, Search, ChevronRight, CircleDot } from 'lucide-react';
 
-export default function Sidebar() {
+export default function Sidebar({ currentView, setCurrentView }) {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
@@ -18,9 +18,17 @@ export default function Sidebar() {
           <Home size={16} />
           <span>Inicio</span>
         </div>
-        <div className="menu-item">
+        <div className="menu-item active">
           <CheckSquare size={16} />
           <span>Mis tareas</span>
+        </div>
+        
+        {/* Navigation Tabs */}
+        <div className="nav-tabs" style={{marginLeft: '1.5rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.2rem'}}>
+          <button className={`nav-item ${currentView === 'topology' ? 'active' : ''}`} onClick={() => setCurrentView('topology')} style={{background: 'none', border: 'none', color: currentView === 'topology' ? '#fff' : '#a3a6aa', cursor: 'pointer', textAlign: 'left', padding: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+            <CircleDot size={14} />
+            Topología
+          </button>
         </div>
       </div>
 

@@ -11,6 +11,7 @@ import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
 import ListView from './components/views/ListView';
 import BoardView from './components/views/BoardView';
+import TopologyView from './components/views/TopologyView';
 import './App.css';
 
 const locales = { 'es': es };
@@ -88,27 +89,26 @@ function App() {
 
   return (
     <div className="layout-container">
-      <Sidebar />
+      <Sidebar currentView={currentView} setCurrentView={setCurrentView} />
+      
       <div className="main-content">
         <TopBar currentView={currentView} setCurrentView={setCurrentView} />
         
-        <div className="view-container animate-fade-in">
+        <div className="view-content">
           {currentView === 'calendar' && (
-            <div className="glass-panel" style={{ height: '100%', padding: '1rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-                <button className="btn btn-primary" onClick={() => { setSelectedTask(null); setIsModalOpen(true); }}>+ Nueva Tarea</button>
-              </div>
+            <div style={{ height: 'calc(100vh - 120px)' }} className="animate-fade-in clickup-calendar">
               <Calendar
                 localizer={localizer}
                 events={tasks}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: 'calc(100vh - 120px)' }}
-                selectable
-                onSelectSlot={handleSelectSlot}
-                onSelectEvent={handleSelectEvent}
+                style={{ height: '100%', color: 'white' }}
                 eventPropGetter={eventStyleGetter}
-                culture="es"
+                messages={{ next: "Sig", previous: "Ant", today: "Hoy", month: "Mes", week: "Semana", day: "Día" }}
+                onSelectEvent={(event) => {
+                  setSelectedTask(event);
+                  setIsModalOpen(true);
+                }}
               />
             </div>
           )}
@@ -128,6 +128,10 @@ function App() {
               onAddTask={(status) => { setSelectedTask({ status: status }); setIsModalOpen(true); }}
               onDropTask={handleDropTask}
             />
+          )}
+
+          {currentView === 'topology' && (
+            <TopologyView tasks={tasks} />
           )}
 
           {currentView === 'table' && (

@@ -51,7 +51,15 @@ const initDb = async () => {
             )
         `);
 
-        console.log('Database initialized - Tables ready (Phase 3)');
+        // Tabla de topologia (whiteboard)
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS topology (
+                project_id INT PRIMARY KEY,
+                data LONGTEXT
+            )
+        `);
+
+        console.log('Database initialized - Tables ready (Phase 5)');
     } catch (error) {
         console.error('Error initializing database:', error.message);
     }
@@ -167,6 +175,34 @@ app.delete('/api/attachments/:id', async (req, res) => {
     try {
         await db.query('DELETE FROM attachments WHERE id = ?', [req.params.id]);
         res.json({ message: 'Attachment deleted' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// --- RUTAS DE TOPOLOGÍA ---
+app.get('/api/topology/:projectId', async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT data FROM topology WHERE project_id = ?', [req.params.projectId]);
+        if (rows.length > 0) {
+            res.json(JSON.parse(rows[0].data));
+        } else {
+            res.json({ nodes: [], edges: [] });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/api/topology/:projectId', async (req, res) => {
+    const { nodes, edges } = req.body;
+    const dataString = JSON.stringify({ nodes, edges });
+    try {
+        await db.query(
+            'INSERT INTO topology (project_id, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = ?',
+            [req.params.projectId, dataString, dataString]
+        );
+        res.json({ message: 'Topology saved successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

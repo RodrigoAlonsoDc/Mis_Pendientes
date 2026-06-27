@@ -566,3 +566,43 @@
 .board-add-group:hover {
   color: #fff;
 }
+
+/* Topology View Styles */
+.topology-toolbar {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+  background: rgba(30, 30, 30, 0.8);
+  padding: 10px;
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.topology-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: rgba(30, 30, 30, 0.8);
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #a3a6aa;
+  font-size: 0.85rem;
+  backdrop-filter: blur(5px);
+}
+.react-flow__node {
+  font-family: 'Inter', sans-serif;
+}
+.react-flow__controls button {
+  background-color: #2b2d31;
+  border-bottom: 1px solid #475569;
+  fill: #fff;
+}
+.react-flow__controls button:hover {
+  background-color: #475569;
+}
