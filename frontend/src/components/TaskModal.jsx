@@ -207,9 +207,9 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, initialDa
                 {subtasks.map(st => (
                   <div key={st.id} className="subtask-item">
                     <button className="subtask-check" onClick={() => toggleSubtask(st.id, st.completed)}>
-                      {st.completed ? <CheckCircle2 size={16} color="#10b981" /> : <Circle size={16} color="#a3a6aa" />}
+                      {st.completed ? <CheckCircle2 size={16} color="#10b981" /> : <Circle size={16} color="var(--text-muted)" />}
                     </button>
-                    <span style={{textDecoration: st.completed ? 'line-through' : 'none', color: st.completed ? '#a3a6aa' : '#fff', flex: 1}}>
+                    <span style={{textDecoration: st.completed ? 'line-through' : 'none', color: st.completed ? 'var(--text-muted)' : 'var(--text-main)', flex: 1}}>
                       {st.title}
                     </span>
                     <button className="subtask-delete" onClick={() => deleteSubtask(st.id)}>
@@ -251,7 +251,7 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, initialDa
               <div className="attachments-list">
                 {attachments.map(att => (
                   <div key={att.id} className="attachment-item">
-                    <Link size={14} color="#a3a6aa" />
+                    <Link size={14} color="var(--text-muted)" />
                     <a href={att.url} target="_blank" rel="noopener noreferrer">{att.name}</a>
                     <button className="subtask-delete" onClick={() => deleteAttachment(att.id)}>
                       <Trash2 size={14} />
@@ -279,7 +279,7 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, initialDa
           </div>
         </div>
 
-        <div className="modal-actions" style={{borderTop: '1px solid rgba(255,255,255,0.05)', marginTop: '2rem', paddingTop: '1rem'}}>
+        <div className="modal-actions" style={{borderTop: '1px solid var(--border-color)', marginTop: '2rem', paddingTop: '1rem'}}>
           {initialData?.id && (
             <button type="button" className="btn btn-danger" onClick={() => onDelete(initialData.id)}>
               Eliminar Tarea

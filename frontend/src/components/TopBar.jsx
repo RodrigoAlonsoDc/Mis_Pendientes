@@ -1,6 +1,6 @@
-import { LayoutList, Calendar as CalendarIcon, KanbanSquare, Table2, Plus } from 'lucide-react';
+import { LayoutList, Calendar as CalendarIcon, KanbanSquare, Table2, Plus, Menu, Settings } from 'lucide-react';
 
-export default function TopBar({ currentView, setCurrentView }) {
+export default function TopBar({ currentView, setCurrentView, activeProject, onMenuToggle }) {
   const views = [
     { id: 'list', label: 'Lista', icon: LayoutList },
     { id: 'board', label: 'Tablero', icon: KanbanSquare },
@@ -11,10 +11,19 @@ export default function TopBar({ currentView, setCurrentView }) {
   return (
     <div className="topbar">
       <div className="topbar-left">
+        <button className="menu-toggle" onClick={onMenuToggle} title="Abrir menú">
+          <Menu size={20} />
+        </button>
         <div className="breadcrumbs">
-          <span className="path-parent">Espacio del equipo</span>
-          <span className="separator">/</span>
-          <span className="path-current">Proyecto 1</span>
+          {currentView === 'workspace' ? (
+            <span className="path-current" style={{color: 'var(--text-muted)'}}>Vista de Espacio</span>
+          ) : activeProject ? (
+            <>
+              <span className="path-current" style={{color: activeProject.color}}>{activeProject.name}</span>
+            </>
+          ) : (
+            <span className="path-parent">Ningún proyecto seleccionado</span>
+          )}
         </div>
       </div>
       
@@ -38,8 +47,9 @@ export default function TopBar({ currentView, setCurrentView }) {
       </div>
       
       <div className="topbar-right">
-        <button className="btn-filter">Filtro</button>
-        <button className="btn-personalize">Personalizar</button>
+        <button className="icon-btn" title="Configuración de Temas" onClick={() => document.dispatchEvent(new CustomEvent('openThemeModal'))}>
+          <Settings size={20} color="var(--text-muted)" />
+        </button>
       </div>
     </div>
   );

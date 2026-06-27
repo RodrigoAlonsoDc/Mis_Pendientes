@@ -55,13 +55,13 @@ export default function BoardView({ tasks, onTaskClick, onAddTask, onDropTask })
           onDrop={(e) => handleDrop(e, group.id)}
         >
           <div className="board-column-header">
-            <div className="board-status-badge" style={{backgroundColor: group.color === '#475569' ? 'transparent' : group.color, border: group.color === '#475569' ? '1px solid #475569' : 'none', color: group.color === '#475569' ? '#a3a6aa' : '#fff' }}>
+            <div className="board-status-badge" style={{backgroundColor: group.color === '#475569' ? 'transparent' : group.color, border: group.color === '#475569' ? '1px solid #475569' : 'none', color: group.color === '#475569' ? 'var(--text-muted)' : 'var(--text-main)' }}>
               {group.id === 'COMPLETADA' && <CheckCircle2 size={12} style={{marginRight: '4px'}} />}
               {group.name} 
               <span className="board-task-count">{group.tasks.length}</span>
             </div>
             <div className="board-column-actions">
-              <MoreHorizontal size={16} color="#a3a6aa" />
+              <MoreHorizontal size={16} color="var(--text-muted)" />
               <button className="add-task-icon" onClick={() => onAddTask(group.id)}>+</button>
             </div>
           </div>
@@ -84,7 +84,7 @@ export default function BoardView({ tasks, onTaskClick, onAddTask, onDropTask })
                 <div className="board-card-meta">
                   <div className="meta-icon"><User size={14} /> <span>{task.assignee || '-'}</span></div>
                   <div className="meta-icon"><CalendarIcon size={14} /> <span>{formatDate(task.end_time || task.end)}</span></div>
-                  <div className="meta-icon"><Flag size={14} color={task.priority === 'Alta' || task.priority === 'Urgente' ? '#ef4444' : '#a3a6aa'} /> <span>-</span></div>
+                  <div className="meta-icon"><Flag size={14} color={task.priority === 'Alta' || task.priority === 'Urgente' ? '#ef4444' : 'var(--text-muted)'} /> <span>-</span></div>
                 </div>
               </div>
             ))}

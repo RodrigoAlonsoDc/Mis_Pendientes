@@ -53,7 +53,7 @@ export default function ListView({ tasks, onTaskClick, onAddTask }) {
                   <td>
                     <div className="task-name-cell">
                       <div className="circle-check"></div>
-                      <span style={{color: task.color || '#fff'}}>{task.title}</span>
+                      <span style={{color: task.color || 'var(--text-main)'}}>{task.title}</span>
                     </div>
                   </td>
                   <td>
@@ -70,7 +70,7 @@ export default function ListView({ tasks, onTaskClick, onAddTask }) {
                   </td>
                   <td style={{fontSize: '0.85rem'}}>{formatDate(task.end_time || task.end)}</td>
                   <td>
-                    <span style={{fontSize: '0.85rem', color: task.priority === 'Alta' || task.priority === 'Urgente' ? '#ef4444' : '#a3a6aa'}}>
+                    <span style={{fontSize: '0.85rem', color: task.priority === 'Alta' || task.priority === 'Urgente' ? '#ef4444' : 'var(--text-muted)'}}>
                       {task.priority || 'Normal'}
                     </span>
                   </td>
