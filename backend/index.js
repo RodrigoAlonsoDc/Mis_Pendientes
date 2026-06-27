@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Inicializar la tabla si no existe
+// Inicializar la base de datos
 const initDb = async () => {
     try {
         await db.query(`
@@ -20,17 +20,44 @@ const initDb = async () => {
                 progress INT DEFAULT 0,
                 status VARCHAR(50) DEFAULT 'Pendiente',
                 color VARCHAR(20) DEFAULT '#3b82f6',
+                priority VARCHAR(20) DEFAULT 'Normal',
+                assignee VARCHAR(100) DEFAULT '',
+                project_id INT DEFAULT 1,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
-        console.log('Database initialized - Table tasks ready');
+
+        // Tabla de subtareas
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS subtasks (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                task_id INT NOT NULL,
+                title VARCHAR(255) NOT NULL,
+                completed BOOLEAN DEFAULT false,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+            )
+        `);
+
+        // Tabla de adjuntos (enlaces)
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS attachments (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                task_id INT NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                url TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+            )
+        `);
+
+        console.log('Database initialized - Tables ready (Phase 3)');
     } catch (error) {
         console.error('Error initializing database:', error.message);
     }
 };
 
-// Rutas de la API
-// Obtener todas las tareas
+// --- RUTAS DE TAREAS ---
 app.get('/api/tasks', async (req, res) => {
     try {
         const [rows] = await db.query('SELECT * FROM tasks ORDER BY start_time ASC');
@@ -40,28 +67,26 @@ app.get('/api/tasks', async (req, res) => {
     }
 });
 
-// Crear una nueva tarea
 app.post('/api/tasks', async (req, res) => {
-    const { title, description, start_time, end_time, progress, status, color } = req.body;
+    const { title, description, start_time, end_time, progress, status, color, priority, assignee, project_id } = req.body;
     try {
         const [result] = await db.query(
-            'INSERT INTO tasks (title, description, start_time, end_time, progress, status, color) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [title, description || '', start_time, end_time, progress || 0, status || 'Pendiente', color || '#3b82f6']
+            'INSERT INTO tasks (title, description, start_time, end_time, progress, status, color, priority, assignee, project_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [title, description || '', start_time, end_time, progress || 0, status || 'Pendiente', color || '#3b82f6', priority || 'Normal', assignee || '', project_id || 1]
         );
-        res.status(201).json({ id: result.insertId, title, description, start_time, end_time, progress, status, color });
+        res.status(201).json({ id: result.insertId, title, description, start_time, end_time, progress, status, color, priority, assignee, project_id });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Actualizar una tarea
 app.put('/api/tasks/:id', async (req, res) => {
     const { id } = req.params;
-    const { title, description, start_time, end_time, progress, status, color } = req.body;
+    const { title, description, start_time, end_time, progress, status, color, priority, assignee, project_id } = req.body;
     try {
         await db.query(
-            'UPDATE tasks SET title = ?, description = ?, start_time = ?, end_time = ?, progress = ?, status = ?, color = ? WHERE id = ?',
-            [title, description, start_time, end_time, progress, status, color, id]
+            'UPDATE tasks SET title = ?, description = ?, start_time = ?, end_time = ?, progress = ?, status = ?, color = ?, priority = ?, assignee = ?, project_id = ? WHERE id = ?',
+            [title, description, start_time, end_time, progress, status, color, priority, assignee, project_id, id]
         );
         res.json({ message: 'Task updated successfully' });
     } catch (error) {
@@ -69,12 +94,79 @@ app.put('/api/tasks/:id', async (req, res) => {
     }
 });
 
-// Eliminar una tarea
 app.delete('/api/tasks/:id', async (req, res) => {
     const { id } = req.params;
     try {
         await db.query('DELETE FROM tasks WHERE id = ?', [id]);
         res.json({ message: 'Task deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// --- RUTAS DE SUBTAREAS ---
+app.get('/api/tasks/:taskId/subtasks', async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM subtasks WHERE task_id = ? ORDER BY created_at ASC', [req.params.taskId]);
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/tasks/:taskId/subtasks', async (req, res) => {
+    const { title } = req.body;
+    try {
+        const [result] = await db.query('INSERT INTO subtasks (task_id, title) VALUES (?, ?)', [req.params.taskId, title]);
+        res.status(201).json({ id: result.insertId, task_id: req.params.taskId, title, completed: false });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/api/subtasks/:id', async (req, res) => {
+    const { completed } = req.body;
+    try {
+        await db.query('UPDATE subtasks SET completed = ? WHERE id = ?', [completed, req.params.id]);
+        res.json({ message: 'Subtask updated' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/subtasks/:id', async (req, res) => {
+    try {
+        await db.query('DELETE FROM subtasks WHERE id = ?', [req.params.id]);
+        res.json({ message: 'Subtask deleted' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// --- RUTAS DE ADJUNTOS ---
+app.get('/api/tasks/:taskId/attachments', async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM attachments WHERE task_id = ? ORDER BY created_at ASC', [req.params.taskId]);
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/tasks/:taskId/attachments', async (req, res) => {
+    const { name, url } = req.body;
+    try {
+        const [result] = await db.query('INSERT INTO attachments (task_id, name, url) VALUES (?, ?, ?)', [req.params.taskId, name, url]);
+        res.status(201).json({ id: result.insertId, task_id: req.params.taskId, name, url });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/attachments/:id', async (req, res) => {
+    try {
+        await db.query('DELETE FROM attachments WHERE id = ?', [req.params.id]);
+        res.json({ message: 'Attachment deleted' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
