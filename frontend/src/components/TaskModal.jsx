@@ -93,6 +93,8 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, initialDa
     e.preventDefault();
     onSave({
       ...formData,
+      id: initialData?.id,
+      project_id: initialData?.project_id,
       start_time: new Date(formData.start_time),
       end_time: new Date(formData.end_time)
     });

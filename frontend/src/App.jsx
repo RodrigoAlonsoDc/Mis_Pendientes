@@ -224,7 +224,8 @@ function App() {
               onWorkspaceUpdated={(updatedWs) => setWorkspaces(workspaces.map(w => w.id === updatedWs.id ? updatedWs : w))}
               onWorkspaceDeleted={(id) => {
                 setWorkspaces(workspaces.filter(w => w.id !== id));
-                if (activeProject && workspaces.find(w => w.id === id)) setSelectedProjectId(null);
+                setProjects(projects.filter(p => p.workspace_id !== id));
+                if (activeProject && activeProject.workspace_id === id) setSelectedProjectId(null);
               }}
               onProjectCreated={(newProj) => setProjects([...projects, newProj])}
               onProjectUpdated={(updatedProj) => setProjects(projects.map(p => p.id === updatedProj.id ? updatedProj : p))}
@@ -246,6 +247,8 @@ function App() {
               onWorkspaceUpdated={(updatedWs) => setWorkspaces(workspaces.map(w => w.id === updatedWs.id ? updatedWs : w))}
               onWorkspaceDeleted={(id) => {
                 setWorkspaces(workspaces.filter(w => w.id !== id));
+                setProjects(projects.filter(p => p.workspace_id !== id));
+                if (activeProject && activeProject.workspace_id === id) setSelectedProjectId(null);
                 if (selectedWorkspaceId === id) {
                   setCurrentView('home');
                   setSelectedWorkspaceId(null);
