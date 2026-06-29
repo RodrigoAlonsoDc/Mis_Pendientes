@@ -38,7 +38,8 @@ export default function DashboardView({ tasks, workspaces, projects, onWorkspace
       setNewSpaceName('');
       setNewSpaceColor('#8b5cf6');
     } catch (err) {
-      alert("Error al crear el espacio");
+      console.error("Error creating workspace:", err);
+      alert("Error al crear el espacio: " + (err.response?.data?.error || err.message));
     } finally {
       setIsCreating(false);
     }
